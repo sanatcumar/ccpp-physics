@@ -271,7 +271,6 @@ contains
       xlaixy = laiclm
       !
       do ix=1,npts
-      !  print '(A,F10.1)','laiclm=',laiclm(ix)
         zorll(ix) = ZORFCS(ix)
         if (nint(slmskl(ix)) == 0) then
           if (slmsk(ix) > 1.99_kind_phys) then

@@ -23,7 +23,7 @@
      &          kpdais=91,  kpdtg3=11, kpdplr=224,
      &          kpdgla=238, kpdmxi=91, kpdscv=238, kpdsmc=144,
      &          kpdoro=8,   kpdmsk=81, kpdstc=11,  kpdacn=91,
-     &          kpdveg=87,kpdlai=181,
+     &          kpdveg=87,  kpdlai=181,
 !cbosu  max snow albedo uses a grib id number of 159, not 255.
      &          kpdvmn=255, kpdvmx=255,kpdslp=236, kpdabs_0=255,
      &          kpdvet=225, kpdsot=224,kpdsoc=255,kpdabs_1=159,
@@ -353,7 +353,7 @@
      &          vegsmx=1.0,vegsmn=0.0,vegimx=0.0,vegimn=0.0,
      &          vegjmx=0.0,vegjmn=0.0)
 ! leaf area index      
-      parameter(lailmx=7.0,lailmn=0.0,laiomx=7.0,laiomn=0.0,   ! Sanath fix these values
+      parameter(lailmx=7.0,lailmn=0.0,laiomx=7.0,laiomn=0.0,   
      &          laismx=7.0,laismn=0.0,laiimx=7.0,laiimn=0.0,
      &          laijmx=7.0,laijmn=0.0)
       parameter(vmnlmx=1.0,vmnlmn=0.0,vmnomx=0.0,vmnomn=0.0,
@@ -7935,7 +7935,6 @@ cjfe
             else
               call fixrdc_tile(fnlaic, tile_num_ch, i_index, j_index,
      &                         kpdlai, lai(:,nn), mon, len, me)
-!             print '(A,F10.1)','laimon1=',lai(1,12)
             endif
             if (me .eq. 0) write(6,*) 'leaf area index',
      &                                ' cover read in for mon=',mon
@@ -8203,10 +8202,7 @@ cjfe
               call fixrdc_tile(fnlaic, tile_num_ch, i_index, j_index,
      &                         kpdlai, lai(:,nn), mon, len, me)
               
-!            print *, '(A,F10.1)','laimon2=',lai(1,12) 
             endif
-!           if (me .eq. 0) write(6,*) 'leaf area index',
-!    &                                ' cover read in for mon=',mon
           endif
 
 
@@ -8344,7 +8340,6 @@ cjfe
       if(fnlaic(1:8).ne.'        ') then
         do i=1,len
           laiclm(i) = wei1m * lai(i,k1) + wei2m * lai(i,k2)
-!         print '(A,F10.1)','laiclm=',laiclm(i)
         enddo
       endif
 
