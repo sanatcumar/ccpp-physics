@@ -21,7 +21,7 @@ contains
       frac_grid, smc, slc, stc, smois, sh2o, tslb, tiice, tg3, tref, tsfc,         &
       tsfco, tisfc, hice, fice, facsf, facwf, alvsf, alvwf, alnsf, alnwf,          &
       zorli, zorll, zorlo, weasd, slope, snoalb, canopy, vfrac, vtype,             &
-      stype, scolor,xlaixy,                                                        & 
+      stype, scolor,xlaixy,xsaixy,                                                 & 
       shdmin, shdmax, snowd, cv, cvb, cvt, oro, oro_uf,                            &
       xlat_d, xlon_d, slmsk, imap, jmap, errmsg, errflg)
 !
@@ -75,6 +75,7 @@ contains
                                            oro(:),     &
                                            oro_uf(:),  &
                                            xlaixy(:),  &
+                                           xsaixy(:),  &
                                            slmsk(:)
     integer,              intent(inout) :: vtype(:),   &
                                            stype(:),   &
@@ -95,6 +96,7 @@ contains
         slpfcs (nx*ny),                      &
         vegfcs (nx*ny),                      &
         laiclm (nx*ny),                      &
+        saiclm (nx*ny),                      &
         sltfcs (nx*ny),                      &
         slcfcs (nx*ny),                      &               !soil color
         TSFFCS (nx*ny),                      &
@@ -145,6 +147,7 @@ contains
       sltfcs = real(stype)
       slcfcs = real(scolor)         !soil color
       laiclm= xlaixy
+      saiclm= xsaixy
       if (frac_grid) then
         do ix=1,npts
 !         if (landfrac(ix) > -1.0e-8_kind_phys) then
@@ -245,7 +248,7 @@ contains
                      shdmin, shdmax, slpfcs, snoalb, tsffcs,         &
                      weasd, zorfcs, albfc1, tg3, canopy,             &
                      smcfc1, stcfc1, slmsk, aisfcs,                  &
-                     vfrac, vegfcs,laiclm,                           &
+                     vfrac, vegfcs,laiclm,saiclm,                    &
                      sltfcs, slcfcs,alffc1, cv,                      &   !slcfcs: soil color
                      cvb, cvt, me, nthrds,                           &
                      nlunit, size(input_nml_file), input_nml_file,   &
@@ -268,6 +271,7 @@ contains
       stype = int(sltfcs)
       scolor = int(slcfcs)  !soil color
       xlaixy = laiclm
+      xsaixy = saiclm
       do ix=1,npts
         zorll(ix) = ZORFCS(ix)
         if (nint(slmskl(ix)) == 0) then

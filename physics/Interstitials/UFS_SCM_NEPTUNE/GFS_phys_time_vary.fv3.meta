@@ -1905,6 +1905,15 @@
   kind = kind_phys
   intent = inout
   optional = True
+[xsaixy]
+  standard_name = stem_area_index
+  long_name = stem area index
+  units = none
+  dimensions = (horizontal_dimension)
+  type = real
+  kind = kind_phys
+  intent = inout
+  optional = True
 [shdmin]
   standard_name = min_vegetation_area_fraction
   long_name = min fractional coverage of green vegetation

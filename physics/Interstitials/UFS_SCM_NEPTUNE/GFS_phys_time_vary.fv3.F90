@@ -711,7 +711,7 @@
             kice, ialb, isot, ivegsrc, input_nml_file, use_ufo, nst_anl, frac_grid, fhcyc, phour,   &
             lakefrac, min_seaice, min_lakeice, smc, slc, stc, smois, sh2o, tslb, tiice, tg3, tref,  &
             tsfc, tsfco, tisfc, hice, fice, facsf, facwf, alvsf, alvwf, alnsf, alnwf, zorli, zorll, &
-            zorlo, weasd, slope, snoalb, canopy, vfrac, vtype, stype,scolor,xlaixy,                 &
+            zorlo, weasd, slope, snoalb, canopy, vfrac, vtype, stype,scolor,xlaixy,xsaixy,          &
             shdmin, shdmax, snowd,                                                                  &
             cv, cvb, cvt, oro, oro_uf, xlat_d, xlon_d, slmsk, landfrac, ozphys, h2ophys,            &
             do_ugwp_v1, jindx1_tau, jindx2_tau, ddy_j1tau, ddy_j2tau, tau_amf, errmsg, errflg)
@@ -758,7 +758,7 @@
                                       tsfc(:), tsfco(:), tisfc(:), hice(:), fice(:),                 &
                                       facsf(:), facwf(:), alvsf(:), alvwf(:), alnsf(:), alnwf(:),    &
                                       zorli(:), zorll(:), zorlo(:), weasd(:), snoalb(:),             &
-                                      canopy(:), vfrac(:), shdmin(:), shdmax(:),xlaixy(:),           &
+                                      canopy(:), vfrac(:), shdmin(:), shdmax(:),xlaixy(:),xsaixy(:), &
                                       snowd(:), cv(:), cvb(:), cvt(:), oro(:), oro_uf(:), slmsk(:)
          real(kind_phys),      intent(inout), optional :: smois(:,:), sh2o(:,:), tslb(:,:), tref(:)
          integer,              intent(inout) :: vtype(:), stype(:),scolor(:), slope(:) 
@@ -924,7 +924,8 @@
                  frac_grid, smc, slc, stc, smois, sh2o, tslb, tiice, tg3, tref, tsfc,        &
                  tsfco, tisfc, hice, fice, facsf, facwf, alvsf, alvwf, alnsf, alnwf,         &
                  zorli, zorll, zorlo, weasd, slope, snoalb, canopy, vfrac, vtype,            &
-                 stype, scolor,xlaixy, shdmin, shdmax, snowd, cv, cvb, cvt, oro, oro_uf,     &
+                 stype, scolor,xlaixy,xsaixy,                                                &
+                 shdmin, shdmax, snowd, cv, cvb, cvt, oro, oro_uf,                           &
                  xlat_d, xlon_d, slmsk, imap, jmap, errmsg, errflg)
            endif
          endif

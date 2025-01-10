@@ -15,7 +15,7 @@
 !
       integer kpdtsf,kpdwet,kpdsno,kpdzor,kpdais,kpdtg3,kpdplr,kpdgla,
      &        kpdmxi,kpdscv,kpdsmc,kpdoro,kpdmsk,kpdstc,kpdacn,kpdveg,
-     &        kpdlai, kpdvet,kpdsot,kpdsoc,                                      
+     &        kpdlai,kpdsai, kpdvet,kpdsot,kpdsoc,                                      
      &        kpdvmn,kpdvmx,kpdslp,kpdabs
      &,       kpdsnd, kpdabs_0, kpdabs_1, kpdalb(4)
       parameter(kpdtsf=11,  kpdwet=86, kpdsno=65,  kpdzor=83,
@@ -23,7 +23,7 @@
      &          kpdais=91,  kpdtg3=11, kpdplr=224,
      &          kpdgla=238, kpdmxi=91, kpdscv=238, kpdsmc=144,
      &          kpdoro=8,   kpdmsk=81, kpdstc=11,  kpdacn=91,
-     &          kpdveg=87,  kpdlai=182,
+     &          kpdveg=87,  kpdlai=182,kpdsai=213,
 !cbosu  max snow albedo uses a grib id number of 159, not 255.
      &          kpdvmn=255, kpdvmx=255,kpdslp=236, kpdabs_0=255,
      &          kpdvet=225, kpdsot=224,kpdsoc=255,kpdabs_1=159,
@@ -84,7 +84,7 @@
      &,                   tsffcs,snofcs,zorfcs,albfcs,tg3fcs              &
      &,                   cnpfcs,smcfcs,stcfcs,slifcs,aisfcs              &
      &,                   vegfcs,vetfcs                                   &
-     &,                   laiclm,sotfcs,socfcs,alffcs                     & 
+     &,                   laiclm,saiclm,sotfcs,socfcs,alffcs              & 
      &,                   cvfcs,cvbfcs,cvtfcs,me,nthrds,nlunit            &
      &,                   sz_nml,input_nml_file                           &
      &,                   min_ice                                         &
@@ -126,6 +126,8 @@
      &                     vegsmn,vegimx,vegimn,vegjmx,vegjmn,          &
      &                     lailmx,lailmn,laiomx,laiomn,laismx,          &
      &                     laismn,laiimx,laiimn,laijmx,laijmn,          & 
+     &                     sailmx,sailmn,saiomx,saiomn,saismx,          &
+     &                     saismn,saiimx,saiimn,saijmx,saijmn,          &
      &                     vetlmx,vetlmn,vetomx,vetomn,vetsmx,          &
      &                     vetsmn,vetimx,vetimn,vetjmx,vetjmn,          &
      &                     sotlmx,sotlmn,sotomx,sotomn,sotsmx,          &
@@ -136,7 +138,7 @@
      &                     alssmn,alsimx,alsimn,alsjmx,alsjmn,          &
      &                     epstsf,epsalb,epssno,epswet,epszor,          &
      &                     epsplr,epsoro,epssmc,epsscv,eptsfc,          &
-     &                     epstg3,epsais,epsacn,epsveg,epslai,          &
+     &                     epstg3,epsais,epsacn,epsveg,epslai,epssai,   &
      &                     epsvet,                                      &
      &                     epssot,epssoc,epsalf,qctsfs,qcsnos,qctsfi,   & 
      &                     aislim,snwmin,snwmax,cplrl,cplrs,            &
@@ -177,7 +179,7 @@
 
       integer imsk,jmsk,ifp,irtscv,irtacn,irtais,irtsno,irtzor,         &
      &        irtalb,irtsot,irtsoc,irtalf,j,irtvet,irtsmc,irtstc,       &  
-     &        irtveg,irtlai,                                            & 
+     &        irtveg,irtlai,irtsai,                                     & 
      &        irtwet,k,iprnt,kk,irttsf,iret,i,igrdbg,iy,im,id,          &
      &        icalbl,icalbs,icalfl,ictsfs,lugb,len,lsoil,ih,            &
      &        ictsfl,iczors,icplrl,icplrs,iczorl,icalfs,icsnol,         &
@@ -248,6 +250,7 @@
 !     sli .. land/sea/sea-ice mask. (1/0/2 respectively)
 !     veg .. vegetation cover
 !     lai .. leaf area index
+!     sai .. stem area index 
 !     sot .. soil type
 !     soc .. soil color
 !cwu [+2l] add sih & sic
@@ -354,9 +357,14 @@
      &          vegsmx=1.0,vegsmn=0.0,vegimx=0.0,vegimn=0.0,
      &          vegjmx=0.0,vegjmn=0.0)
 ! leaf area index      
-      parameter(lailmx=7.0,lailmn=0.0,laiomx=7.0,laiomn=0.0,   
-     &          laismx=7.0,laismn=0.0,laiimx=7.0,laiimn=0.0,
-     &          laijmx=7.0,laijmn=0.0)
+      parameter(lailmx=9.0,lailmn=0.0,laiomx=9.0,laiomn=0.0,   
+     &          laismx=9.0,laismn=0.0,laiimx=9.0,laiimn=0.0,
+     &          laijmx=9.0,laijmn=0.0)
+
+! Stem area index
+      parameter(sailmx=1.0,sailmn=0.0,saiomx=1.0,saiomn=0.0,
+     &          saismx=1.0,saismn=0.0,saiimx=1.0,saiimn=0.0,
+     &          saijmx=1.0,saijmn=0.0)
       parameter(vmnlmx=1.0,vmnlmn=0.0,vmnomx=0.0,vmnomn=0.0,
      &          vmnsmx=1.0,vmnsmn=0.0,vmnimx=0.0,vmnimn=0.0,
      &          vmnjmx=0.0,vmnjmn=0.0)
@@ -396,7 +404,7 @@
      &          epswet=0.01,epszor=0.0000001,epsplr=1.,epsoro=0.,
      &          epssmc=0.0001,epsscv=0.,eptsfc=0.01,epstg3=0.01,
      &          epsais=0.,epsacn=0.01,epsveg=0.01,epslai=0.01,
-     &          epssih=0.001,epssic=0.001,
+     &          epssai=0.01,epssih=0.001,epssic=0.001,
      &          epsvmn=0.01,epsvmx=0.01,epsabs=0.001,epsslp=0.01,
      &          epsvet=.01,epssot=.01,epssoc=0.01,epsalf=.001)
 !
@@ -488,7 +496,7 @@
 !
       character*500 fntsfc,fnwetc,fnsnoc,fnzorc,fnalbc,fnaisc           &
      &,             fnplrc,fntg3c,fnscvc,fnsmcc,fnstcc,fnacnc           &
-     &,             fnvegc,fnlaic                                       &
+     &,             fnvegc,fnlaic,fnsaic                                &
      &,             fnvetc,fnsotc,fnsocc                                & 
      &,             fnvmnc,fnvmxc,fnslpc,fnabsc, fnalbc2
       real (kind=kind_io8) tsfclm(len), wetclm(len),   snoclm(len)      &
@@ -496,7 +504,8 @@
      &,    tg3clm(len), acnclm(len),   cnpclm(len)                      &
      &,    cvclm (len), cvbclm(len),   cvtclm(len)                      &
      &,    scvclm(len), tsfcl2(len),   vegclm(len) ,laiclm(len)         &
-     &, vetclm(len), sotclm(len), socclm(len),alfclm(len,2), sliclm(len)&
+     &,    saiclm(len), vetclm(len), sotclm(len), socclm(len)           &
+     &,    alfclm(len,2), sliclm(len)                                   &
      &,    smcclm(len,lsoil), stcclm(len,lsoil)                         &
      &,    sihclm(len), sicclm(len)                                     &
      &,    vmnclm(len), vmxclm(len), slpclm(len), absclm(len)
@@ -528,7 +537,7 @@
      &,    zorfcs(len), albfcs(len,4), aisfcs(len)                      &
      &,    tg3fcs(len), acnfcs(len),   cnpfcs(len)                      &
      &,    cvfcs (len), cvbfcs(len),   cvtfcs(len)                      &
-     &,    slifcs(len), vegfcs(len),laifcs(len)                         &
+     &,    slifcs(len), vegfcs(len),laifcs(len),saifcs(len)             &
      &,    vetfcs(len), sotfcs(len), socfcs(len),   alffcs(len,2)       &
      &,    smcfcs(len,lsoil), stcfcs(len,lsoil)                         &
      &,    sihfcs(len), sicfcs(len), sitfcs(len)                        &
@@ -555,12 +564,12 @@
       real (kind=kind_io8) slmskh(mdata)
       character*500 fnmskh
       integer kpd7, kpd9
-!
+
       logical icefl1(len), icefl2(len)
 !
       real (kind=kind_io8), allocatable, dimension(:) ::                &
      &     tsffcsd, snofcsd, tg3fcsd, zorfcsd, slifcsd, aisfcsd,        &
-     &   cnpfcsd, vegfcsd,laifcsd,                                      &
+     &   cnpfcsd, vegfcsd,laifcsd,saifsd,                               &
      &   vetfcsd, sotfcsd, socfcsd, sihfcsd, sicfcsd,                   &
      &     vmnfcsd, vmxfcsd, slpfcsd, absfcsd
       real (kind=kind_io8), allocatable, dimension(:,:) ::              &
@@ -635,7 +644,7 @@
       namelist/namsfc/fnglac,fnmxic,
      &                fntsfc,fnwetc,fnsnoc,fnzorc,fnalbc,fnaisc,
      &                fnplrc,fntg3c,fnscvc,fnsmcc,fnstcc,fnacnc,
-     &                fnvegc,fnlaic,fnvetc,fnsotc,fnsocc,fnalbc2,    
+     &                fnvegc,fnlaic,fnsaic,fnvetc,fnsotc,fnsocc,fnalbc2,    
      &                fnvmnc,fnvmxc,fnslpc,fnabsc,
      &                fntsfa,fnweta,fnsnoa,fnzora,fnalba,fnaisa,
      &                fnplra,fntg3a,fnscva,fnsmca,fnstca,fnacna,
@@ -679,6 +688,7 @@
       data fnvegc/'global_vegfrac.1x1.grb'/
       data fnvetc/'global_vegtype.1x1.grb'/
       data fnlaic/''/
+      data fnsaic/''/
       data fnglac/'global_glacier.2x2.grb'/
       data fnmxic/'global_maxice.2x2.grb'/
       data fnsnoc/'global_snoclim.1.875.grb'/
@@ -773,7 +783,7 @@
       save ifp,fnglac,fnmxic,
      &     fntsfc,fnwetc,fnsnoc,fnzorc,fnalbc,fnaisc,
      &     fnplrc,fntg3c,fnscvc,fnsmcc,fnstcc,fnacnc,
-     &     fnvegc,fnlaic,
+     &     fnvegc,fnlaic,fnsaic,
      &     fntsfa,fnweta,fnsnoa,fnzora,fnalba,fnaisa,
      &     fnplra,fntg3a,fnscva,fnsmca,fnstca,fnacna,fnvega,
      &     fnlaia,
@@ -900,6 +910,7 @@
           print *,' isot=', isot,' ivegsrc=',ivegsrc
           print *,' fnsotc =', fnsotc
           print *,' fnlaic=' , fnlaic
+          print *,' fnsaic=' , fnsaic
         endif
 
         if (ivegsrc == 2) then   ! sib
@@ -1157,18 +1168,18 @@
       call clima(lugb,iy,im,id,ih,fh,len,lsoil,slmskl,slmskw,
      &           fntsfc,fnwetc,fnsnoc,fnzorc,fnalbc,fnaisc,
      &           fntg3c,fnscvc,fnsmcc,fnstcc,fnacnc,fnvegc,
-     &           fnlaic,
+     &           fnlaic,fnsaic,
      &           fnvetc,fnsotc,fnsocc,                   
      &           fnvmnc,fnvmxc,fnslpc,fnabsc,
      &           tsfclm,tsfcl2,wetclm,snoclm,zorclm,albclm,aisclm,
      &           tg3clm,cvclm ,cvbclm,cvtclm,
      &           cnpclm,smcclm,stcclm,sliclm,scvclm,acnclm,vegclm,
-     &           laiclm,
+     &           laiclm,saiclm,
      &           vetclm,sotclm,socclm,alfclm,           
      &           vmnclm,vmxclm,slpclm,absclm,
      &           kpdtsf,kpdwet,kpdsno,kpdzor,kpdalb,kpdais,
      &           kpdtg3,kpdscv,kpdacn,kpdsmc,kpdstc,kpdveg,kpdlai,
-     &           kpdvet,kpdsot,kpdsoc,kpdalf,tsfcl0,   
+     &           kpdsai,kpdvet,kpdsot,kpdsoc,kpdalf,tsfcl0,   
      &           kpdvmn,kpdvmx,kpdslp,kpdabs,
      &           deltsfc, lanom
      &,          imsk, jmsk, slmskh, rla, rlo, gausm, blnmsk, bltmsk,me
@@ -1361,7 +1372,11 @@
      &            lailmx,lailmn,laiomx,laiomn,laiimx,laiimn,
      &            laijmx,lailmn,laismx,laismn,epslai,
      &            rla,rlo,len,kqcm,percrit,lgchek,me)
-
+!     call qcmxmn('saic    ',saiclm,sliclm,snoclm,icefl1,
+      call qcmxmn('saic    ',saiclm,slmskl,snoclm,icefl1,
+     &            sailmx,sailmn,saiomx,saiomn,saiimx,saiimn,
+     &            saijmx,sailmn,saismx,saismn,epslai,
+     &            rla,rlo,len,kqcm,percrit,lgchek,me)
 
 !     call qcmxmn('vetc    ',vetclm,sliclm,snoclm,icefl1,
       call qcmxmn('vetc    ',vetclm,slmskl,snoclm,icefl1,
@@ -1446,6 +1461,7 @@
         call monitr('orog  ',orog  ,sliclm,snoclm,len)
         call monitr('vegclm',vegclm,sliclm,snoclm,len)
         call monitr('laiclm',laiclm,sliclm,snoclm,len)
+        call monitr('saiclm',saiclm,sliclm,snoclm,len)
         call monitr('vetclm',vetclm,sliclm,snoclm,len)
         call monitr('sotclm',sotclm,sliclm,snoclm,len)
         call monitr('socclm',socclm,sliclm,snoclm,len) 
@@ -1875,7 +1891,7 @@
         call filfcs(tsffcs,wetfcs,snofcs,zorfcs,albfcs,
      &              tg3fcs,cvfcs ,cvbfcs,cvtfcs,
      &              cnpfcs,smcfcs,stcfcs,slifcs,aisfcs,
-     &              vegfcs,laifcs,                                 
+     &              vegfcs,laifcs,saifcs,                                
      &              vetfcs,sotfcs,socfcs,alffcs,  
 !cwu [+1l] add ()fcs for sih, sic
      &              sihfcs,sicfcs,
@@ -4581,7 +4597,7 @@
       subroutine filfcs(tsffcs,wetfcs,snofcs,zorfcs,albfcs,             &
      &                  tg3fcs,cvfcs ,cvbfcs,cvtfcs,                    &
      &                  cnpfcs,smcfcs,stcfcs,slifcs,aisfcs,             &
-     &                  vegfcs,laifcs,                                  &
+     &                  vegfcs,laifcs,saifcs,                           &
      &                  vetfcs, sotfcs,socfcs, alffcs,                  & !socfcs: soil color
      &                  sihfcs,sicfcs,                                  & !cwu [+1l] add ()fcs for sih, sic
      &                  vmnfcs,vmxfcs,slpfcs,absfcs,                    & !clu [+1l] add ()fcs for vmn, vmx, slp, abs
@@ -4603,7 +4619,7 @@
      &     cvfcs (len),cvbfcs(len),cvtfcs(len),                         &
      &     cnpfcs(len),                                                 &
      &     smcfcs(len,lsoil),stcfcs(len,lsoil),                         &
-     &     slifcs(len),vegfcs(len),laifcs(len),                         &
+     &     slifcs(len),vegfcs(len),laifcs(len),saifcs(len),             &
      &     vetfcs(len),sotfcs(len),socfcs(len),alffcs(len,2)            & !socfcs: soil color
      &,    sihfcs(len),sicfcs(len)                                      &
      &,    vmnfcs(len),vmxfcs(len),slpfcs(len),absfcs(len)
@@ -7182,17 +7198,17 @@ cjfe
       subroutine clima(lugb,iy,im,id,ih,fh,len,lsoil,slmskl,slmskw,     &
      &                 fntsfc,fnwetc,fnsnoc,fnzorc,fnalbc,fnaisc,       &
      &                 fntg3c,fnscvc,fnsmcc,fnstcc,fnacnc,fnvegc,       &
-     &                 fnlaic,fnvetc,fnsotc,fnsocc,                     &
+     &                 fnlaic,fnsaic,fnvetc,fnsotc,fnsocc,              &
      &                 fnvmnc,fnvmxc,fnslpc,fnabsc,                     &
      &                 tsfclm,tsfcl2,wetclm,snoclm,zorclm,albclm,aisclm,&
      &                 tg3clm,cvclm ,cvbclm,cvtclm,                     &
      &                 cnpclm,smcclm,stcclm,sliclm,scvclm,acnclm,vegclm,&
-     &                 laiclm,                                          &
+     &                 laiclm,saiclm,                                   &
      &                 vetclm,sotclm,socclm,alfclm,                     &
      &                 vmnclm,vmxclm,slpclm,absclm,                     &
      &                 kpdtsf,kpdwet,kpdsno,kpdzor,kpdalb,kpdais,       &
      &                 kpdtg3,kpdscv,kpdacn,kpdsmc,kpdstc,kpdveg,kpdlai,&
-     &                 kpdvet,kpdsot,kpdsoc,kpdalf,tsfcl0,              & 
+     &                 kpdsai,kpdvet,kpdsot,kpdsoc,kpdalf,tsfcl0,       & 
      &                 kpdvmn,kpdvmx,kpdslp,kpdabs,                     &
      &                 deltsfc, lanom                                   &
      &,                imsk, jmsk, slmskh, outlat, outlon               &
@@ -7211,13 +7227,13 @@ cjfe
      &        kpdzor,kpdtsf,kpdwet,kpdscv,kpdacn,kpdais,kpdtg3,im,id,   &
      &        lugb,iy,len,lsoil,ih,kpdsmc,iprnt,me,m1,m2,k1,k2,         &
      &        kpdvet,kpdsot,kpdsoc,kpdstc,kpdveg,jmsk,imsk,j,ialb       & 
-     &,       kpdvmn,kpdvmx,kpdslp,kpdabs,landice_cat,kpdlai
+     &,       kpdvmn,kpdvmx,kpdslp,kpdabs,landice_cat,kpdlai,kpdsai
       integer kpdalb(4), kpdalf(2)
 !
       character*500 fntsfc,fnwetc,fnsnoc,fnzorc,fnalbc,fnaisc,          &
      &             fntg3c,fnscvc,fnsmcc,fnstcc,fnacnc,fnvegc,           &
-     &             fnvetc,fnsotc,fnsocc,fnalbc2,fnlaic                  &
-     &,            fnvmnc,fnvmxc,fnslpc,fnabsc
+     &             fnvetc,fnsotc,fnsocc,fnalbc2,fnlaic,fnsaic,          &
+     &            fnvmnc,fnvmxc,fnslpc,fnabsc
       real (kind=kind_io8) tsfclm(len),tsfcl2(len),                     &
      &     wetclm(len),snoclm(len),                                     &
      &     zorclm(len),albclm(len,4),aisclm(len),                       &
@@ -7225,7 +7241,7 @@ cjfe
      &     cvclm (len),cvbclm(len),cvtclm(len),                         &
      &     cnpclm(len),                                                 &
      &     smcclm(len,lsoil),stcclm(len,lsoil),                         &
-     &     sliclm(len),scvclm(len),vegclm(len),laiclm(len),             &
+     &     sliclm(len),scvclm(len),vegclm(len),laiclm(len),saiclm(len), &
      &     vetclm(len),sotclm(len),socclm(len),alfclm(len,2)            & 
      &,    vmnclm(len),vmxclm(len),slpclm(len),absclm(len)
       real (kind=kind_io8) slmskh(imsk,jmsk)
@@ -7267,7 +7283,7 @@ cjfe
      &                     ais(:,:), acn(:,:),   scv(:,:), smc(:,:,:),
      &                     tg3(:),   alb(:,:,:), alf(:,:),
      &                     vet(:),   sot(:), soc(:),    tsf2(:),         
-     &                     veg(:,:), lai(:,:),stc(:,:,:)
+     &                     veg(:,:), lai(:,:),stc(:,:,:), sai(:,:)
      &,                    vmn(:), vmx(:),  slp(:), absm(:)
 !
       integer mon1s, mon2s, sea1s, sea2s, sea1, sea2, hyr1, hyr2
@@ -7275,7 +7291,7 @@ cjfe
       data mon1s/0/, mon2s/0/, sea1s/0/, sea2s/0/
 !
       save first, tsf, sno, zor, wet,  ais, acn, scv, smc, tg3,
-     &     alb,   alf, vet, sot, soc,tsf2, veg,lai, stc,                    
+     &     alb,   alf, vet, sot, soc,tsf2, veg,lai,sai, stc,                    
      &     vmn,   vmx, slp, absm,
      &     mon1s, mon2s, sea1s, sea2s, dayhf, k1, k2, m1, m2,
      &     landice_cat
@@ -7333,7 +7349,7 @@ cjfe
      &           vet(len),   sot(len), soc(len),tsf2(len),  
 !clu [+1l] add vmn, vmx, slp, abs
      &           vmn(len),   vmx(len), slp(len), absm(len),
-     &           veg(len,2),lai(len,2) ,stc(len,lsoil,2))
+     &           veg(len,2),lai(len,2),sai(len,2) ,stc(len,lsoil,2))
 !
 !     get tsf climatology for the begining of the forecast
 !
@@ -7943,6 +7959,25 @@ cjfe
             endif
 
 
+!
+!  stem area index
+!
+          if (fnsaic(1:8).ne.'        ') then
+            if ( index(fnsaic, "tileX.nc") == 0) then ! grib
+              kpd7=-1
+              call fixrdc(lugb,fnsaic,kpdsai,kpd7,mon,slmskl,
+     &                    sai(1,nn),len,iret
+     &,                   imsk, jmsk, slmskh, gaus,blno, blto
+     &,                   outlat, outlon, me)
+            else
+              call fixrdc_tile(fnsaic, tile_num_ch, i_index, j_index,
+     &                         kpdsai, sai(:,nn), mon, len, me)
+            endif
+            if (me .eq. 0) write(6,*) 'leaf area index',
+     &                                ' cover read in for mon=',mon
+
+            endif
+
         enddo
 !
       mon1s = mon1 ; mon2s = mon2 ; sea1s = sea1 ; sea2s = sea2
@@ -8207,6 +8242,24 @@ cjfe
           endif
 
 
+!  stem are index
+!
+          if (fnsaic(1:8) .ne. '        ') then
+            if ( index(fnsaic, "tileX.nc") == 0) then ! grib file
+              kpd7=-1
+              call fixrdc(lugb,fnsaic,kpdsai,kpd7,mon,slmskl,
+     &                    sai(1,nn),len,iret
+     &,                   imsk, jmsk, slmskh, gaus,blno, blto
+     &,                   outlat, outlon, me)
+            else
+              call fixrdc_tile(fnsaic, tile_num_ch, i_index, j_index,
+     &                         kpdsai, sai(:,nn), mon, len, me)
+              
+            endif
+          endif
+
+
+
 
 
 
@@ -8344,6 +8397,13 @@ cjfe
         enddo
       endif
 
+!
+      if(fnsaic(1:8).ne.'        ') then
+        do i=1,len
+          saiclm(i) = wei1m * sai(i,k1) + wei2m * sai(i,k2)
+          print '(a,f10.1)', "saiclm=",saiclm(i)
+        enddo
+      endif
 
 
 
@@ -8483,7 +8543,9 @@ cjfe
         case(87)
           error=nf90_inq_varid(ncid, 'vegetation_greenness', id_var)
         case(182)
-          error=nf90_inq_varid(ncid, 'leaf_area_index', id_var)  
+          error=nf90_inq_varid(ncid, 'leaf_area_index', id_var)
+         case(213)
+          error=nf90_inq_varid(ncid, 'leaf_area_index', id_var)
         case(159)
           error=nf90_inq_varid(ncid, 'maximum_snow_albedo', id_var)
         case(189)
